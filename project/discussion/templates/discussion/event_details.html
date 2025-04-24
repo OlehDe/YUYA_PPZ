@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Event Details{% endblock %}
+
+{% block content %}
+<h2>{{ event.title }}</h2>
+<p><strong>Опис:</strong> {{ event.description }}</p>
+<p><strong>Дата:</strong> {{ event.date.strftime('%Y-%m-%d %H:%M') }}</p>
+<p><strong>Локація:</strong> {{ event.location }}</p>
+
+<h3>Обговорення</h3>
+<ul>
+    {% for review in reviews %}
+    <li>
+        <strong>{{ review.user.username }}:</strong> {{ review.content }}
+    </li>
+    {% endfor %}
+</ul>
+
+<form method="post">
+    {% csrf_token %}
+    {{ review_form.as_p }}
+    <button class="button" type="submit">Додати відгук</button>
+</form>
+{% endblock %}

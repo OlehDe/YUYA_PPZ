@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Авторизація</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .home-button {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .home-button a {
+      display: inline-block;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      background-color: #3498db;
+      color: white;
+    }
+    .home-button a:hover {
+      background-color: #2980b9;
+    }
+    .auth-buttons {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .auth-buttons a {
+      display: inline-block;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    .auth-buttons a:first-child {
+      background-color: #3498db;
+      color: white;
+    }
+    .auth-buttons a:last-child {
+      background-color: #2ecc71;
+      color: white;
+    }
+    .auth-buttons a:first-child:hover {
+      background-color: #2980b9;
+    }
+    .auth-buttons a:last-child:hover {
+      background-color: #27ae60;
+    }
+    main {
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    form {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+    button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #c0392b;
+    }
+    h1 {
+      margin: 0 auto;
+      font-size: 24px;
+      line-height: 30px;
+    }
+    h2 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    p {
+      margin: 0 0 15px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="home-button">
+    <a href="/">Головна сторінка</a>
+  </div>
+  <h1>Платформа управління подіями</h1>
+  <div class="auth-buttons">
+    <a href="/login">Увійти</a>
+    <a href="/register">Реєстрація</a>
+  </div>
+</header>
+
+<main>
+  <h2>Вхід в систему</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Увійти</button>
+  </form>
+</main>
+
+</body>
+</html>
