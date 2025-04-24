@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Event Management{% endblock %}</title>
+    <title>{% block title %}Система управління подіями{% endblock %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,18 +43,16 @@
             font-weight: bold;
             font-size: 14px;
         }
-        .login {
-            background-color: #3498db;
-        }
-        .register {
-            background-color: #2ecc71;
-        }
-        .login:hover {
-            background-color: #2980b9;
-        }
-        .register:hover {
-            background-color: #27ae60;
-        }
+        .login { background-color: #3498db; }
+        .register { background-color: #2ecc71; }
+        .logout { background-color: #e74c3c; }
+        .create { background-color: #f39c12; }
+
+        .login:hover { background-color: #2980b9; }
+        .register:hover { background-color: #27ae60; }
+        .logout:hover { background-color: #c0392b; }
+        .create:hover { background-color: #d35400; }
+
         h1 {
             margin: 0 auto;
             font-size: 24px;
@@ -86,34 +84,64 @@
             margin-top: 10px;
             transition: background-color 0.3s ease;
         }
-        .button:hover {
-            background-color: #c0392b;
+        .button:hover { background-color: #c0392b; }
+
+        .event-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            padding: 12px;
+
+        .event-title {
+            color: #2c3e50;
+            font-size: 20px;
             margin-bottom: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
         }
-        li a {
-            color: #e74c3c;
-            text-decoration: none;
+
+        .event-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
-        li a:hover {
-            text-decoration: underline;
+
+        .event-description {
+            color: #34495e;
+            margin-bottom: 15px;
         }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .edit-button {
+            background-color: #f39c12;
+        }
+
+        .delete-button {
+            background-color: #e74c3c;
+        }
+
         form {
             margin: 0 auto;
             max-width: 500px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
-        input {
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        input, textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -121,10 +149,53 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        input:focus {
+
+        input:focus, textarea:focus {
             border-color: #3498db;
             outline: none;
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .comment-section {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .comment {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .comment-meta {
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .username {
+            color: white;
+            margin-right: 15px;
         }
     </style>
 </head>
@@ -132,11 +203,27 @@
     <header>
         <h1>{% block header %}Платформа управління подіями{% endblock %}</h1>
         <div class="nav-buttons">
-            <a href="/login" class="auth-button login">Увійти</a>
-            <a href="/register" class="auth-button register">Реєстрація</a>
+            {% if user.is_authenticated %}
+                <span class="username">{{ user.username }}</span>
+                {% if user.is_staff %}
+                    <a href='/admin_user_list' class="auth-button">Керування користувачами</a>
+                {% endif %}
+                <a href='/event_create' class="auth-button create">Створити подію</a>
+                <a href='/logout' class="auth-button logout">Вийти</a>
+            {% else %}
+                <a href='/login' class="auth-button login">Увійти</a>
+                <a href='/register' class="auth-button register">Реєстрація</a>
+            {% endif %}
         </div>
     </header>
     <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         {% block content %}{% endblock %}
     </div>
     <footer>

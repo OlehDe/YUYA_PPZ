@@ -1,15 +1,15 @@
 from django.contrib import admin
-from .models import Event, Review
+from .models import Event, Review, Comment
+
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date', 'location', 'organizer')
-    list_filter = ('date', 'location')
-    search_fields = ('title', 'description')
-    date_hierarchy = 'date'
+    list_display = ('title', 'date', 'location', 'creator', 'created_at')
+    list_filter = ('date', 'location', 'creator')
+    search_fields = ('title', 'description', 'location')
 
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('event', 'user', 'timestamp')
-    list_filter = ('event', 'user')
-    search_fields = ('content', )
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('event', 'author', 'created_at')
+    list_filter = ('event', 'author', 'created_at')
+    search_fields = ('text', 'author__username', 'event__title')

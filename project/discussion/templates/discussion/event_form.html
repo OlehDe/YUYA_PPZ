@@ -1,12 +1,21 @@
-{% extends "base.html" %}
-
-{% block title %}Create Event{% endblock %}
+{% extends 'discussion/base.html' %}
 
 {% block content %}
-<h2>Створення нової події</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="button" type="submit">Зберегти</button>
-</form>
+    <h2>{% if form.instance.pk %}Редагування події{% else %}Створення нової події{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="alert alert-error">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="button">Зберегти</button>
+        <a href='/event_list' class="button">Скасувати</a>
+    </form>
 {% endblock %}

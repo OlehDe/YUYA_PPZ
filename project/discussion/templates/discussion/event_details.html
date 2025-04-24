@@ -1,25 +1,46 @@
-{% extends "base.html" %}
-
-{% block title %}Event Details{% endblock %}
+{% extends 'discussion/base.html' %}
 
 {% block content %}
-<h2>{{ event.title }}</h2>
-<p><strong>Опис:</strong> {{ event.description }}</p>
-<p><strong>Дата:</strong> {{ event.date.strftime('%Y-%m-%d %H:%M') }}</p>
-<p><strong>Локація:</strong> {{ event.location }}</p>
+    <div class="event-card">
+        <h2 class="event-title">{{ event.title }}</h2>
+        <div class="event-meta">
+            <span>Дата: {{ event.date|date:"d.m.Y H:i" }}</span> |
+            <span>Місце: {{ event.location }}</span> |
+            <span>Організатор: {{ event.creator.username }}</span>
+        </div>
+        <div class="event-description">
+            {{ event.description }}
+        </div>
+        {% if user == event.creator or user.is_staff %}
+            <div class="button-group">
+                <a href='/event_edit' class="button edit-button">Редагувати</a>
+                <a href='/event_delete' class="button delete-button">Видалити</a>
+            </div>
+        {% endif %}
+    </div>
 
-<h3>Обговорення</h3>
-<ul>
-    {% for review in reviews %}
-    <li>
-        <strong>{{ review.user.username }}:</strong> {{ review.content }}
-    </li>
-    {% endfor %}
-</ul>
+    <div class="comment-section">
+        <h3>Коментарі</h3>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Додати коментар</button>
+            </form>
+        {% endif %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ review_form.as_p }}
-    <button class="button" type="submit">Додати відгук</button>
-</form>
+        {% for comment in comments %}
+            <div class="comment">
+                <div class="comment-meta">
+                    {{ comment.author.username }} | {{ comment.created_at|date:"d.m.Y H:i" }}
+                    {% if user == comment.author or user.is_staff %}
+                        <a href='/comment_delete' class="delete-button">Видалити</a>
+                    {% endif %}
+                </div>
+                {{ comment.text }}
+            </div>
+        {% empty %}
+            <p>Поки що немає коментарів.</p>
+        {% endfor %}
+    </div>
 {% endblock %}
